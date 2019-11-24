@@ -1,0 +1,4 @@
+gcc -Wall -Wextra -Werror -g main.c ft_write_buffer.c ft_putstr_buffer.c ft_putchar_buffer.c format_float.c ft_itoa_base.c ft_printf.c ft_atoi_parser.c ft_strndup.c  format_percent.c  format_str.c ft_long_itoa.c format_upper_hex.c  format_hex.c  format_char.c format_unsigned_int.c format_oct.c format_int.c format_pointer.c libft/libft.a -I ft_print.h
+./a.out
+gcc main.c ft_write_buffer.c ft_putstr_buffer.c ft_putchar_buffer.c format_float.c ft_itoa_base.c ft_printf.c ft_atoi_parser.c ft_strndup.c  format_percent.c  format_str.c ft_long_itoa.c format_upper_hex.c  format_hex.c  format_char.c format_unsigned_int.c format_oct.c format_int.c format_pointer.c libft/libft.a -I ft_print.h
+./a.out
