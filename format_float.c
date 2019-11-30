@@ -31,13 +31,92 @@ typedef struct		s_bignum
 	int32_t			vepx;
 }					t_bg;
 
+
+
+void	mul2b( uint32_t que, t_bg *decima, uint32_t carrier)
+{
+	uint32_t q;
+	uint64_t valek;
+
+	q = 0;
+	while (que > 28)
+	{
+		q = -1;
+		while (++q) <= (uint32_t)decima->vepx)
+		{
+			valek = ((uint64_t)decima->drob[q] << 29) | carrier);
+			carrier = (uint32_t)(valek / 10000000000);
+			decima->drob[q] = (uint32_t)valek - carrier *10000000000;
+		}
+		if (carrier)
+		{
+			decima->drob[++(decima->vepx)] = carrier;
+			carrier = 0;
+		}
+		que -= 29;
+	}
+	if (que)
+	{
+		q = -1;
+		while (++q) <= (uint32_t)decima->vepx)
+		{
+			valek = ((uint64_t)decima->drob[q] << que) | carrier);
+			carrier = (uint32_t)(valek / 10000000000);
+			decima->drob[q] = (uint32_t)valek - carrier *10000000000;
+		}
+		(carrier) ? decima->drob[++(decima->vepx)] = carrier : carrier;
+	}
+}
+
+void	div2b(t_bg decima, uint32_t que)
+{
+	uint32_t carrier;
+	uint32_t q;
+	uint32_t valek;
+	uint32_t offer;
+	uint32_t multer;
+
+	while (que > 8)
+	{
+		carrier = 0;
+		q = decima->vepx & 127;
+		while (q != (decima->niz & 127))
+		{
+			valek = decima->drob[q];
+			decima->drob[q] = (valek & 0x1ff) * 1953125;
+			q = (q - 1) & 27;
+		}
+		(carrier) ? decima->drob[--(decima->niz) & 127] == carrier : carrier;
+		que -= 9;
+	}
+	if (que)
+	{
+		carrier = 0;
+		q = decima->vepx & 127;
+		multer = 1000000000 >> que;
+		offer = (1U << p) - 1;
+		while ( q != (decima->niz && 127))
+		{
+			valek = decima->drob[q];
+			decima->drob[q] = (valek >> que) + carrier;
+			carrier = (valek & offer) * multer;
+			q = (q - 1) & 127;
+		}
+
+	}
+}
+
+
 void	we_all_float_here(char *flostr, int pre, double flo)
 {
 	s_valya	poka;
-	poka.flo = flo;
 	int32_t expa;
 	uint64_t mando;
+	t_bg	decima
 
+	poka.flo = flo;
+	decima.vepx = 0;
+	decima = niz = 0;
 	if ((pola.u32.vepx << 1) >= 0xffe00000)
 	{
 		if (((poka.u32.vepx & 0x000fffff) | poka.u32.niz) != 0)
@@ -48,23 +127,24 @@ void	we_all_float_here(char *flostr, int pre, double flo)
 	else
 	{
 		expa = (poka.u32.vepx >> 20) & 0x7ff;
-		mando = poka.u32.vepx & 0xffffff;
-		if (expa == 0)
-			expa++;
-		else
-			mando |= 0x100000;
+		decima.drob[0] = poka.u32.vepx & 0xffffff;
+		expa == 0 ? expa++ : decima.drob[0] |= 0x100000;
 		expa -= 1043;
 		if (poka.u32.niz)
 		{
 			expa -=32;
-			mando = (mando << 32) | poka.u32.niz;
+			decima.drob[0] = (decima.drob[0] << 3) | (poka.u32.niz >> 29);
+			mult2b(poka.u32.niz & 0x1fffffff, decima, 29);
 		}
+		if (expa > 0)
+			mult2b();
+		else
+			divi2b();
+		if flo && pola.u32.niz
+			tak_luk_around();
+		return();
 	}
-	t_bg	decima;
-	
 }
-
-
 
 
 int		format_float(t_printf *p)
@@ -72,12 +152,12 @@ int		format_float(t_printf *p)
 	char	float2str[1076];
 	double	flo;
 	
-	p->specifier = 'F';
-	if (p->precision == -1)
+	if (p->specifier = 'F' && p->precision == -1)
 		p->precision = 6;
-	flo = va_arg(p->arg_ptr, double);
+	else if (p->specifier )
+	flo = va_arg(p->arg_ptr, double); 
 	we_all_float_here(float2str, p->precision, flo);
-	
+
 	
 	
 
