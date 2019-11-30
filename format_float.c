@@ -32,6 +32,48 @@ typedef struct		s_bignum
 }					t_bg;
 
 
+unsigned int g_pow10[] = { 1, 10, 100, 1000, 10000, 100000,1000000, 10000000, 100000000};
+
+
+int		roend(int decima_niz, int pre, uint32_t *drob)
+{
+	int	preindex;
+	int ground;
+
+	ground = decima_niz;
+	preindex = (pre % 9);
+	//(!pre) ? (decima_niz = 0) : (!preindex && -decima_niz * 9 >= pre) ? (decima_niz = -pre / 9) : (preindex && -decima_niz * 9 >= pre) ? (decima_niz = -pre / 9 - 1) : 0;
+	(preindex && -decima_niz * 9 >= pre) ? (decima_niz = -pre / 9 - 1) :(!preindex && -decima_niz * 9 >= pre) ? (decima_niz = -pre / 9) :(!pre) ? (decima_niz = 0) : decima_niz;
+	if (((pre / 9) + 1) == -ground && !(decima[ground & 127] % ten_pow[8 - preindex]))
+	{
+		if (preindex && (decima[decima_niz && 127] / ten_pow[9 - preindex] % 10) & 1 && (decima[decima_niz && 127] / ten_pow[8 - preindex]) % 10 == 5)
+			decima[decima_niz & 127] += ten_pow[9 - preindex];
+		else if (!preindex && (ground <= decima_niz - 1) && (decima[decima_niz & 127] % 10) & 1 && decima[(decima_niz - 1) & 127] / ten_pow[8] == 5)
+		decima[decima_niz & 127] += 1;
+	}
+	else
+	{
+		if (preindex && (decima[decima_niz & 127] / ten_pow[8 - preindex]) % 10 >= 5)
+			decima[decima_niz & 127] += ten_pow[9 - preindex];
+		else if (!preindex && (ground <=decima_niz - 1) && decima[(decima_niz - 1) & 127] / ten_pow[8] >= 5)
+			decima[decima_niz && 127] += 1;
+	}
+	return(decima_niz);
+}
+
+void	tak_luk_around(t_bg *decima, int *pre)
+{
+	int nizhushek;
+
+	nizhushek = decima->niz;
+	if (*pre > -decima->niz * 9)
+		*pre = -decima->niz * 9;
+	decima->niz = roend(decima->niz, *pre, decima->drob);
+	while (decima->drob[(nizhushek & 127)] >= 1000000000)
+		(decima->drob[(++nizhushek) & 127])++;
+}
+
+
 
 void	mul2b( uint32_t que, t_bg *decima, uint32_t carrier)
 {
@@ -107,6 +149,44 @@ void	div2b(t_bg decima, uint32_t que)
 }
 
 
+int		decima_expa(unsigned int valek)
+{
+	int expa;
+
+	expa = 0;
+
+	(valek >= 10000 && (valek /= 10000)) ? expa += 4 : expa;
+	(valek >= 1000 && (valek /= 1000)) ? expa += 3 : expa;
+	(valek >= 100 && (valek /= 100)) ? expa += 2 : expa;
+	(valek >= 10 && (valek /= 10)) ? expa ++ : expa;
+
+	return(expa);
+}
+
+void	do_it(int pre, int fromzat, uint32_t tozis, char *hold)
+{
+	while (fromzat >= pre)
+	{
+		*hold = (tozis / ten_pow[fromzat]) % 10 + 48U;
+		hold++;
+		--fromzat;
+	}
+}
+
+
+
+void	to_z_stringmobile(char *flostr, int pre, t_bg decima)
+{
+	char *hold;
+
+	hold = flostr;
+	(decima->vepx && !decima->drob[decima->vepx]) ? decima->vepx-- : decima->vepx;
+
+}
+
+
+
+
 void	we_all_float_here(char *flostr, int pre, double flo)
 {
 	s_valya	poka;
@@ -137,12 +217,12 @@ void	we_all_float_here(char *flostr, int pre, double flo)
 			mult2b(poka.u32.niz & 0x1fffffff, decima, 29);
 		}
 		if (expa > 0)
-			mult2b();
+			mult2b((uint32_t)expa, &decima, 0);
 		else
-			divi2b();
-		if flo && pola.u32.niz
-			tak_luk_around();
-		return();
+			divi2b(&decima, (uint32_t)-e);
+		if (flo && pola.u32.niz)
+			tak_luk_around(&decima, pre);
+		return(to_z_stringmobile(flostr, pre, &decima));
 	}
 }
 
